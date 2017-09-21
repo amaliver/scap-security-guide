@@ -1,0 +1,64 @@
+<def-group>
+  <definition version="1" class="compliance" id="eap_approved_tls">
+    <metadata>
+      <title>JBoss must be configured to use an approved TLS version</title>
+      <description>tls v1.1 or v1.2 for secured connections</description>
+      <affected family="undefined">
+        <platform>JBoss Enterprise Application Platform 6</platform>
+      </affected>
+    </metadata>
+    <criteria operator="AND" negate="true">
+      <criterion test_ref="test_eap_approved_tls_exists" />
+      <criterion test_ref="test_eap_approved_tls" />
+    </criteria>
+  </definition>
+
+  <ind:xmlfilecontent_test id="test_eap_approved_tls_exists" version="1" check="all" comment="Check if https is enabled">
+    <ind:object object_ref="obj_eap_approved_tls_exists" />
+    <ind:object state_ref="obj_eap_approved_tls_exists_state" />
+  </ind:xmlfilecontent_test>
+
+  <ind:xmlfilecontent_test id="test_eap_approved_tls" version="1" check="all" comment="Check tls v1.1 or v1.2 is being used">
+    <ind:object object_ref="obj_eap_approved_tls" />
+    <ind:object state_ref="obj_eap_approved_tls_state" />
+  </ind:xmlfilecontent_test>
+
+  <ind:xmlfilecontent_state id="obj_eap_approved_tls_exists_state" version="1" comment="Test if eap 6 has https connectors configured">
+    <ind:path var_ref="local_var_eap_approved_tls"/>
+    <ind:filename>standalone.xml</ind:filename>
+    <ind:xpath>/server/web/https/ssl </ind:xpath>
+    <ind:value_of operation="pattern match">(/server/web/https/ssl)
+  </ind:xmlfilecontent_state>
+
+  <ind:xmlfilecontent_state id="obj_eap_approved_tls_state" version="1" comment="Test if eap 6 has https connectors configured">
+    <ind:path var_ref="local_var_eap_approved_tls"/>
+    <ind:filename>standalone.xml</ind:filename>
+    <ind:xpath>/server/web/https/ssl/configuration[@protocol]</ind:xpath>
+    <ind:value_of operation="pattern match">("tls v1.2" | "tls v1.1")</ind:value_of>
+  </ind:xmlfilecontent_state>
+
+  <ind:xmlfilecontent_object id="obj_eap_approved_tls_exists" version="1">
+    <ind:path var_ref="local_var_eap_approved_tls"/>
+    <ind:filename>standalone.xml</ind:filename>
+    <ind:xpath datatype="string" operation="pattern match">/server/web/https/ssl</ind:xpath>
+  </ind:xmlfilecontent_object>
+
+  <ind:xmlfilecontent_object id="obj_eap_approved_tls" version="1">
+    <ind:path var_ref="local_var_eap_approved_tls"/>
+    <ind:filename>standalone.xml</ind:filename>
+    <ind:xpath>/server/web/https/ssl/configuration[@protocol]</ind:xpath>
+  </ind:xmlfilecontent_object>
+
+  <ind:environmentvariable58_object id="obj_env_eap_approved_tls" version="1">
+    <ind:pid xsi:nil="true" datatype="int" />
+    <ind:name>JBOSS_HOME</ind:name>
+  </ind:environmentvariable58_object>
+
+  <local_variable id="local_var_eap_approved_tls" version="1" datatype="string" comment="configuration location">
+    <concat>
+      <object_component object_ref="obj_env_eap_configure_auditing" item_field="value" />
+      <literal_component datatype="string">/standalone/configuration/</literal_component>
+    </concat>
+  </local_variable>
+
+</def-group>
