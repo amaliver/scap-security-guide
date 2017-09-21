@@ -7,9 +7,12 @@
         <platform>JBoss Enterprise Application Platform 6</platform>
       </affected>
     </metadata>
-    <criteria operator="AND" negate="true">
-      <criterion test_ref="test_eap_approved_tls_exists" />
-      <criterion test_ref="test_eap_approved_tls" />
+    <criteria operator="OR" />
+      <criterion test_ref="test_eap_approved_tls_exists" negate="true"/>
+      <criteria operator="AND">
+        <criterion test_ref="test_eap_approved_tls_exists" negate="true"/>
+        <criterion test_ref="test_eap_approved_tls" />
+      </criteria>
     </criteria>
   </definition>
 
